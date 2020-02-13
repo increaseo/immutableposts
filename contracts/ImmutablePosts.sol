@@ -1,48 +1,52 @@
 pragma solidity >= 0.4.0 < 0.7.0;
 //pragma experimental ABIEncoderV2;
-import "zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/ownership/Ownable.sol";
 
-
-
+/// @title Immutable Post Contract
+/// @author Seb @Increaseo on the concept idea of Troy @Increaseo
+/// @notice For now, this contract create a post, category have a fee split.
 
 contract ImmutablePosts is Ownable {
-    constructor() public {
-  
-    }
-
-
-   struct Post {
+    
+    // The Post
+    struct Post {
         string title;
         string description;
         string category;
     }
-    
+
+    //Category 
     struct Category {
         string name;
     }
     uint nbarticles = 0;
 
     // Beneficiary Wallet address
-    address pluginbeneficiary;
+    address payable pluginbeneficiary;
     
     //Our Wallet
-    address walletaddress;
+    address payable walletaddress;
 
+    //Post to Owner
     mapping (uint => address) public postToOwner;
+    // Owner to Post
     mapping (address => uint) ownerToPost;
+    //Post Count per Owner
     mapping (address => uint) ownerPostCount;
     
-    
-    event newPost (uint id, string title, string description, string category);
+    // New Post created
+    event newPost(uint id, string title, string description, string category);
+    // New Category created
     event newCategory(uint id, string categoryname);
 
-    // ARRAY METHOD
+    // ARRAY METHOD for Posts and Categories
     Post[] public posts;
     Category[] public categories;
 
     // Fee to post a Post
     uint postFee = 0.001 ether;
     
+    //Create a new post
     function createPostandPay(string memory _title, string memory _description, string memory _category) public payable {
           require(msg.value == postFee);
           uint id = posts.push(Post(_title,_description,_category)) - 1;
@@ -51,12 +55,13 @@ contract ImmutablePosts is Ownable {
           ownerPostCount[msg.sender]++;
           emit newPost(id, _title, _description,_category);
           nbarticles ++;
+          //Pay and Split the Fee
           payAndSplitFee(postFee);
           
           
     }
-    //Split fee between Beneficiary and Us
-    function payAndSplitFee(uint _fullfee) internal payable {
+    //Split fee for the post between Beneficiary and Us
+    function payAndSplitFee(uint _fullfee) public payable {
           uint commissionPercentage = 2;
           uint postFeeBeneficiary = _fullfee * commissionPercentage / 100;
           pluginbeneficiary.transfer(postFeeBeneficiary);
@@ -64,7 +69,7 @@ contract ImmutablePosts is Ownable {
           walletaddress.transfer(postFeeUs);
     }
 
-    
+    //Create new category
     function createCategory (string memory _categoryname) public {
          uint id = categories.push(Category(_categoryname)) - 1;
          emit newCategory(id, _categoryname);
@@ -85,7 +90,8 @@ contract ImmutablePosts is Ownable {
     //     return ownerToPost[_myAddress];
     //   }
 
-     function getPostbyAccount(address _owner) external view returns(uint[]) {
+     //Get Post per Account
+     function getPostbyAccount(address _owner) external view returns(uint[] memory) {
         uint[] memory result = new uint[](ownerPostCount[_owner]);
         uint counter = 0;
         for (uint i = 0; i < posts.length; i++) {
@@ -103,11 +109,12 @@ contract ImmutablePosts is Ownable {
      }
      
      // Setup Beneficiary wallet adddress
-    function setUpBeneficiary(address _newbeneficiary) internal {
+    function setUpBeneficiary(address payable _newbeneficiary) internal {
        pluginbeneficiary = _newbeneficiary;
     }
-
-     function setUpOurWallerAddress(address _ourwallet) external onlyOwner {
+     
+    // Update our Wallet address Admin only 
+     function setUpOurWallerAddress(address payable _ourwallet) external onlyOwner {
        walletaddress = _ourwallet;
     }
      
