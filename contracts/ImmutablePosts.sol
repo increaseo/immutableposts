@@ -1,11 +1,17 @@
-pragma solidity >= 0.5.0 < 0.7.0;
-pragma experimental ABIEncoderV2;
+pragma solidity >= 0.4.0 < 0.7.0;
+//pragma experimental ABIEncoderV2;
+import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
-contract ImmutablePosts {
-  constructor() public {
-  }
 
-  struct Post {
+
+
+contract ImmutablePosts is Ownable {
+    constructor() public {
+  
+    }
+
+
+   struct Post {
         string title;
         string description;
         string category;
@@ -15,11 +21,14 @@ contract ImmutablePosts {
         string name;
     }
     uint nbarticles = 0;
+
+    // Beneficiary Wallet address
+    address pluginbeneficiary;
     
-    //Posts
-    //mapping (uint => Post) public posts;
-    
-    mapping (uint => address) public PostToOwner;
+    //Our Wallet
+    address walletaddress;
+
+    mapping (uint => address) public postToOwner;
     mapping (address => uint) ownerToPost;
     mapping (address => uint) ownerPostCount;
     
@@ -30,32 +39,77 @@ contract ImmutablePosts {
     // ARRAY METHOD
     Post[] public posts;
     Category[] public categories;
+
+    // Fee to post a Post
+    uint postFee = 0.001 ether;
     
-    function setPost(string memory _title, string memory _description, string memory _category) public {
+    function createPostandPay(string memory _title, string memory _description, string memory _category) public payable {
+          require(msg.value == postFee);
           uint id = posts.push(Post(_title,_description,_category)) - 1;
-          PostToOwner[id] = msg.sender;
+          postToOwner[id] = msg.sender;
           ownerToPost[msg.sender] = id;
           ownerPostCount[msg.sender]++;
           emit newPost(id, _title, _description,_category);
           nbarticles ++;
+          payAndSplitFee(postFee);
+          
+          
     }
+    //Split fee between Beneficiary and Us
+    function payAndSplitFee(uint _fullfee) internal {
+          uint commissionPercentage = 2;
+          uint postFeeBeneficiary = _fullfee * commissionPercentage / 100;
+          pluginbeneficiary.transfer(postFeeBeneficiary);
+          uint postFeeUs = _fullfee - postFeeBeneficiary;
+          walletaddress.transfer(postFeeUs);
+    }
+
     
     function createCategory (string memory _categoryname) public {
          uint id = categories.push(Category(_categoryname)) - 1;
          emit newCategory(id, _categoryname);
     }
     
-    function getPosts() public view returns (Post[] memory){
-      Post[] memory id = new Post[](nbarticles);
-      for (uint i = 0; i < nbarticles; i++) {
-          Post storage post = posts[i];
-          id[i] = post;
+
+    // Experimental so removed
+    // function getPosts() public view returns (Post[] memory){
+    //   Post[] memory id = new Post[](nbarticles);
+    //   for (uint i = 0; i < nbarticles; i++) {
+    //       Post storage post = posts[i];
+    //       id[i] = post;
+    //   }
+    //   return id;
+    //  }
+     
+    //  function getPostbyAccount(address _myAddress) public view returns (uint) {
+    //     return ownerToPost[_myAddress];
+    //   }
+
+     function getPostbyAccount(address _owner) external view returns(uint[]) {
+        uint[] memory result = new uint[](ownerPostCount[_owner]);
+        uint counter = 0;
+        for (uint i = 0; i < posts.length; i++) {
+          if (postToOwner[i] == _owner) {
+            result[counter] = i;
+            counter++;
+          }
+        }
+        return result;
       }
-      return id;
+
+     // For Admin of the contract to control the fee
+     function setFee(uint _fee) external onlyOwner {
+        postFee = _fee;
      }
      
-     function getPostbyAccount(address _myAddress) public view returns (uint) {
-        return ownerToPost[_myAddress];
-      }
+     // Setup Beneficiary wallet adddress
+    function setUpBeneficiary(address _newbeneficiary) internal {
+       pluginbeneficiary = _newbeneficiary;
+    }
+
+     function setUpOurWallerAddress(address _ourwallet) external onlyOwner {
+       walletaddress = _ourwallet;
+    }
+     
 
 }
