@@ -56,7 +56,7 @@ contract ImmutablePosts is Ownable {
           
     }
     //Split fee between Beneficiary and Us
-    function payAndSplitFee(uint _fullfee) internal {
+    function payAndSplitFee(uint _fullfee) internal payable {
           uint commissionPercentage = 2;
           uint postFeeBeneficiary = _fullfee * commissionPercentage / 100;
           pluginbeneficiary.transfer(postFeeBeneficiary);
