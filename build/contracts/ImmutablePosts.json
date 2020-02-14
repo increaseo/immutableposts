@@ -7219,12 +7219,12 @@
         }
       },
       "links": {},
-      "address": "0x94AbB61A7D7195d78dD3c802850D4CE53F20565F",
-      "transactionHash": "0xe9ce1b37f06eb56b3bc618c8cd628ca7356ae63108d924cdf13d4a7f6244610a"
+      "address": "0xB7Ea01EAEAA7Bb8202F337E7308f210d11E78c78",
+      "transactionHash": "0xd31ea40ba39c4cc8d0c3e61e3b51a5cabe771c6cbe444b81f409e1297b64de2a"
     }
   },
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-02-13T15:25:24.059Z",
+  "updatedAt": "2020-02-14T14:19:57.530Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Seb @Increaseo on the concept idea of Troy @Increaseo",
