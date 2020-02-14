@@ -12,41 +12,45 @@ const App = {
     try {
       // get contract instance
       const networkId = await web3.eth.net.getId();
+      console.log(networkId);
       const deployedNetwork = immutablePostsArtifact.networks[networkId];
+      
       this.meta = new web3.eth.Contract(
         immutablePostsArtifact.abi,
         deployedNetwork.address,
       );
-
+        
       // get accounts
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
 
-      this.refreshBalance();
+      //this.refreshBalance();
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
   },
 
-  refreshBalance: async function() {
-    const { getBalance } = this.meta.methods;
-    const balance = await getBalance(this.account).call();
+  // refreshBalance: async function() {
+  //   const { getBalance } = this.meta.methods;
+  //   const balance = await getBalance(this.account).call();
 
-    const balanceElement = document.getElementsByClassName("balance")[0];
-    balanceElement.innerHTML = balance;
-  },
+  //   const balanceElement = document.getElementsByClassName("balance")[0];
+  //   balanceElement.innerHTML = balance;
+  // },
 
-  sendCoin: async function() {
-    const amount = parseInt(document.getElementById("amount").value);
-    const receiver = document.getElementById("receiver").value;
+  createPostandPay: async function() {
+ 
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
 
-    this.setStatus("Initiating transaction... (please wait)");
+    this.setStatus("Initiating submission... (please wait)");
+    console.log(title);
+    console.log(description);
+    const { createPostandPay } = this.meta.methods;
+    await createPostandPay(title, description, "no category").send({ from: this.account });
 
-    const { sendCoin } = this.meta.methods;
-    await sendCoin(receiver, amount).send({ from: this.account });
-
-    this.setStatus("Transaction complete!");
-    this.refreshBalance();
+    this.setStatus("Upload completed!");
+    //this.refreshBalance();
   },
 
   setStatus: function(message) {
