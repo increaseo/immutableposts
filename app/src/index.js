@@ -28,7 +28,7 @@ const App = {
       const baleth = web3.utils.fromWei(balance,'ether');
       const balanceElement = document.getElementsByClassName("balance")[0];
        balanceElement.innerHTML = baleth;
-      //this.refreshBalance();
+       this.refreshPosts();
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
@@ -36,8 +36,15 @@ const App = {
  
   refreshPosts: async function() {
      const { getPostbyAccount } = this.meta.methods;
+     const { getPostbyId } = this.meta.methods;
      const posts = await getPostbyAccount(this.account).call();
-     console.log(posts);
+     for (var i=0; i <= posts.length-1; i++) {
+          var postdata = await getPostbyId(posts[i]).call();
+          console.log(postdata.title);
+          console.log(postdata.description);
+          console.log(postdata.category);
+     }
+  
   },
 
   refreshBalance: async function() {
@@ -53,12 +60,11 @@ const App = {
  
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
+    const category = document.getElementById("category").value;
 
     this.setStatus("Initiating submission... (please wait)");
-    console.log(title);
-    console.log(description);
     const { createPostandPay } = this.meta.methods;
-    await createPostandPay(title, description, "no category").send({ from: this.account, value:web3.toWei(1, "ether") });
+    await createPostandPay(title, description, category).send({ from: this.account, value:web3.toWei(1, "ether") });
 
     // web3.eth.sendTransaction({
     //   to:'0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6', 
