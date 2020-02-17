@@ -105,6 +105,12 @@ contract ImmutablePosts is Ownable {
         }
         return result;
       }
+     
+     // Get Post by Id Array
+      function getPostbyId(uint pos) public view returns(string memory title, string memory description, string memory category){ 
+        Post storage postss = posts[pos];
+        return (postss.title, postss.description, postss.category);
+     } 
 
      // For Admin of the contract to control the fee
      function setFee(uint _fee) external onlyOwner {

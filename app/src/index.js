@@ -34,6 +34,12 @@ const App = {
     }
   },
  
+  refreshPosts: async function() {
+     const { getPostbyAccount } = this.meta.methods;
+     const posts = await getPostbyAccount(this.account).call();
+     console.log(posts);
+  },
+
   refreshBalance: async function() {
     // const { getBalance } = this.meta.methods;
     // const balance = await getBalance(this.account).call();
@@ -61,7 +67,7 @@ const App = {
     // }, console.log)
 
     this.setStatus("Upload completed!");
-    //this.refreshBalance();
+    this.refreshPosts();
   },
 
   setStatus: function(message) {
