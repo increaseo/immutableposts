@@ -22,10 +22,10 @@ contract ImmutablePosts is Ownable {
     uint nbarticles = 0;
 
     // Beneficiary Wallet address
-    address payable pluginbeneficiary;
+    address payable pluginbeneficiary = 0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6;
     
     //Our Wallet
-    address payable walletaddress;
+    address payable walletaddress = 0x6711be7371C275F62Ee7F69e4Cb7C09ACEd852cC;
 
     //Post to Owner
     mapping (uint => address) public postToOwner;
@@ -34,6 +34,8 @@ contract ImmutablePosts is Ownable {
     //Post Count per Owner
     mapping (address => uint) ownerPostCount;
     
+    mapping (address => uint) balances;
+
     // New Post created
     event newPost(uint id, string title, string description, string category);
     // New Category created
@@ -44,10 +46,10 @@ contract ImmutablePosts is Ownable {
     Category[] public categories;
 
     // Fee to post a Post
-    uint postFee = 0.001 ether;
+    uint postFee = 1 ether;
     
     //Create a new post
-    function createPostandPay(string memory _title, string memory _description, string memory _category) public payable {
+    function createPostandPay(string memory _title, string memory _description, string memory _category) public payable{
           require(msg.value == postFee);
           uint id = posts.push(Post(_title,_description,_category)) - 1;
           postToOwner[id] = msg.sender;
@@ -62,6 +64,7 @@ contract ImmutablePosts is Ownable {
     }
     //Split fee for the post between Beneficiary and Us
     function payAndSplitFee(uint _fullfee) public payable {
+          
           uint commissionPercentage = 2;
           uint postFeeBeneficiary = _fullfee * commissionPercentage / 100;
           pluginbeneficiary.transfer(postFeeBeneficiary);
@@ -117,6 +120,15 @@ contract ImmutablePosts is Ownable {
      function setUpOurWallerAddress(address payable _ourwallet) external onlyOwner {
        walletaddress = _ourwallet;
     }
-     
+
+    //Balance 
+  //  function getBalanceInEth(address addr) public view returns(uint) {
+  //       return ConvertLib.convert(getBalance(addr),2);
+  //   }
+
+    // function getBalance(address addr) public view returns(uint) {
+    //     return balances[addr];
+    // }
+
 
 }
