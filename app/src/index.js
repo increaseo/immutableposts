@@ -37,12 +37,15 @@ const App = {
   refreshPosts: async function() {
      const { getPostbyAccount } = this.meta.methods;
      const { getPostbyId } = this.meta.methods;
+     const postlist = document.getElementById("postlist");
      const posts = await getPostbyAccount(this.account).call();
+     postlist.innerHTML = "";
      for (var i=0; i <= posts.length-1; i++) {
           var postdata = await getPostbyId(posts[i]).call();
           console.log(postdata.title);
           console.log(postdata.description);
           console.log(postdata.category);
+          postlist.innerHTML +="<li><h2>"+postdata.title+"<small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
      }
   
   },
@@ -74,6 +77,8 @@ const App = {
 
     this.setStatus("Upload completed!");
     this.refreshPosts();
+    title = "";
+    description ="";
   },
 
   setStatus: function(message) {
