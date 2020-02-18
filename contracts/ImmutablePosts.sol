@@ -106,6 +106,15 @@ contract ImmutablePosts is Ownable {
         return result;
       }
      
+      // Get All Numbers of Posts
+      function getNbArticles() public view returns (uint _nbarticle){
+         uint counter = 0;
+        for (uint i = 0; i < posts.length; i++) {
+            counter++;
+        }
+        return counter;
+      }
+
      // Get Post by Id Array
       function getPostbyId(uint pos) public view returns(string memory title, string memory description, string memory category){ 
         Post storage postss = posts[pos];

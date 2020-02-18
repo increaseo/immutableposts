@@ -37,8 +37,13 @@ const App = {
   refreshPosts: async function() {
      const { getPostbyAccount } = this.meta.methods;
      const { getPostbyId } = this.meta.methods;
+     const { getNbArticles } = this.meta.methods;
+    
      const postlist = document.getElementById("postlist");
+     const allpostlist = document.getElementById("allpostlist");
      const posts = await getPostbyAccount(this.account).call();
+     const nbposts = await getNbArticles().call();
+     console.log(nbposts);
      postlist.innerHTML = "";
      for (var i=0; i <= posts.length-1; i++) {
           var postdata = await getPostbyId(posts[i]).call();
@@ -47,6 +52,16 @@ const App = {
           console.log(postdata.category);
           postlist.innerHTML +="<li><h2>"+postdata.title+"<small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
      }
+
+     allpostlist.innerHTML = "";
+     for (var j=0; j <= nbposts-1; j++) {
+          var postdata = await getPostbyId(j).call();
+          console.log(postdata.title);
+          console.log(postdata.description);
+          console.log(postdata.category);
+          allpostlist.innerHTML +="<li><h2>"+postdata.title+"<small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
+     }
+
   
   },
 
