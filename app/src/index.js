@@ -35,10 +35,16 @@ const App = {
   },
  
   refreshPosts: async function() {
+
+
      const { getPostbyAccount } = this.meta.methods;
      const { getPostbyId } = this.meta.methods;
      const { getNbArticles } = this.meta.methods;
-    
+
+    //List single post if loaded from Google with#!
+    alert(window.location);
+
+     //List all posts
      const postlist = document.getElementById("postlist");
      const allpostlist = document.getElementById("allpostlist");
      const posts = await getPostbyAccount(this.account).call();
@@ -50,7 +56,13 @@ const App = {
           console.log(postdata.title);
           console.log(postdata.description);
           console.log(postdata.category);
-          postlist.innerHTML +="<li><h2>"+postdata.title+"<small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
+          var strcat = postdata.category;
+          strcat = strcat.replace(/\s+/g, '-').toLowerCase();
+          var strtitle = postdata.title;
+          strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
+          var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+posts[i]);
+          console.log(url);
+          postlist.innerHTML +="<li><h2><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
      }
 
      allpostlist.innerHTML = "";
@@ -59,12 +71,27 @@ const App = {
           console.log(postdata.title);
           console.log(postdata.description);
           console.log(postdata.category);
-          allpostlist.innerHTML +="<li><h2>"+postdata.title+"<small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
+          var strcat = postdata.category;
+          strcat = strcat.replace(/\s+/g, '-').toLowerCase();
+          var strtitle = postdata.title;
+          strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
+          var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+j);
+          console.log(url);
+          allpostlist.innerHTML +="<li><h2><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
      }
-
+     //alert("The URL of this page is: " + window.location);
+    
   
   },
+  gotopost: function(e,elem) {
+    e = e || window.event;
+    e.preventDefault();
+    var urlgoto = elem.getAttribute('data-url');
+    window.history.pushState("", "Sample Title",urlgoto);
 
+   
+
+  },  
   refreshBalance: async function() {
     // const { getBalance } = this.meta.methods;
     // const balance = await getBalance(this.account).call();
@@ -73,6 +100,22 @@ const App = {
     const balanceElement = document.getElementsByClassName("balance")[0];
     balanceElement.innerHTML = balance;
   },
+
+  getpostperid: async function(postid) {
+    const { getPostbyId } = this.meta.methods;
+    var postdata = await getPostbyId(postid).call();
+    const singletitle = document.getElementById("single-title");
+    const singlecat = document.getElementById("single-category");
+    const singledescription = document.getElementById("single-description");
+    singletitle.innerHTML=postdata.title;
+    singledescription.innerHTML=postdata.description;
+    singlecat.innerHTML=postdata.category;
+    var pagelanding = document.getElementById('page-landing');
+    pagelanding.style.display = 'none';
+    var pagesingle = document.getElementById('singpost-page');
+    pagesingle.style.display = 'block';
+
+  },  
 
   createPostandPay: async function() {
  
@@ -104,7 +147,53 @@ const App = {
 
 window.App = App;
 
+var pushState = history.pushState;
+history.pushState = function () {
+    pushState.apply(history, arguments);
+    //fireEvents('pushState', arguments);  // Some event-handling function
+    var theurl = document.location + '';
+    if(theurl == "http://localhost:8081/") {
+      var pagelanding = document.getElementById('page-landing');
+      pagelanding.style.display = 'block';
+      var pagesingle = document.getElementById('singpost-page');
+      pagesingle.style.display = 'none';
+    } else {
+      var splitUrl = theurl.split('/');  
+      var getlasturlbit = splitUrl[4];
+      var splitUrlLast = getlasturlbit.split('-');
+      var postid = splitUrlLast[splitUrlLast.length-1];
+      App.getpostperid(postid);
+
+    }
+   
+};
+
+window.onpopstate = function(event) {
+  //alert(`location: ${document.location}, state: ${JSON.stringify(event.state)}`)
+  var theurl = document.location + '';
+  if(theurl == "http://localhost:8081/") {
+    var pagelanding = document.getElementById('page-landing');
+    pagelanding.style.display = 'block';
+    var pagesingle = document.getElementById('singpost-page');
+    pagesingle.style.display = 'none';
+  } else {
+     var splitUrl = theurl.split('/');  
+     var getlasturlbit = splitUrl[4];
+     var getlasturlbit = splitUrl[4];
+     var splitUrlLast = getlasturlbit.split('-');
+     var postid = splitUrlLast[splitUrlLast.length-1];
+     App.getpostperid(postid);
+
+  }
+  
+}
+
+window.addEventListener("hashchange", function(event){
+  alert('eeee');
+});
+
 window.addEventListener("load", function() {
+ 
   if (window.ethereum) {
     // use MetaMask's provider
     App.web3 = new Web3(window.ethereum);
@@ -121,3 +210,4 @@ window.addEventListener("load", function() {
 
   App.start();
 });
+
