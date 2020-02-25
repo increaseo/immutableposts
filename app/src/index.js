@@ -1,6 +1,8 @@
 import Web3 from "web3";
 import immutablePostsArtifact from "../../build/contracts/ImmutablePosts.json";
 
+
+
 const App = {
   web3: null,
   account: null,
@@ -42,7 +44,21 @@ const App = {
      const { getNbArticles } = this.meta.methods;
 
     //List single post if loaded from Google with#!
-    alert(window.location);
+    var theurl = document.location + '';
+  if(theurl == "http://localhost:8081/") {
+    var pagelanding = document.getElementById('page-landing');
+    pagelanding.style.display = 'block';
+    var pagesingle = document.getElementById('singpost-page');
+    pagesingle.style.display = 'none';
+  } else {
+     var splitUrl = theurl.split('/');  
+     var getlasturlbit = splitUrl[4];
+     var getlasturlbit = splitUrl[4];
+     var splitUrlLast = getlasturlbit.split('-');
+     var postid = splitUrlLast[splitUrlLast.length-1];
+     App.getpostperid(postid);
+
+  }
 
      //List all posts
      const postlist = document.getElementById("postlist");
@@ -188,12 +204,14 @@ window.onpopstate = function(event) {
   
 }
 
+
+
 window.addEventListener("hashchange", function(event){
   alert('eeee');
 });
 
 window.addEventListener("load", function() {
- 
+  
   if (window.ethereum) {
     // use MetaMask's provider
     App.web3 = new Web3(window.ethereum);
