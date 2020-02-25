@@ -11,72 +11,87 @@
     }
   </style>
   <body>
-    <h1>Immutable Post</h1>
+    <div class="row">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6">
 
-    <div id="page-landing">
-        <p>You have <strong class="balance">loading...</strong> ETH</p>
-
-        <h1>Create a Post</h1>
-
-        <label for="title">Title:</label>
-        <input type="text" id="title" placeholder="My Title" />
-        <label for="description">Description:</label><br>
-        <textarea id="description" placeholder="My Description"></textarea><br>
-        <label for="category">Category:</label><br>
-        <select id="category">
-          <option value="Arts & Entertainment">Arts & Entertainment</option>
-          <option value="Business">Business</option>
-          <option value="Careers">Careers</option>
-          <option value="Computers">Computers</option>
-          <option value="Engineering & Technology">Engineering & Technology</option>
-          <option value="Environment">Environment</option>
-          <option value="Fashion">Fashion</option>
-          <option value="Finance">Finance</option>
-          <option value="Food & Beverage">Food & Beverage</option>
-          <option value="Health & Fitness">Health & Fitness</option>
-          <option value="Hobbies">Hobbies</option>
-          <option value="Home & Family">Home & Family</option>
-          <option value="Internet">Internet</option>
-          <option value="Jobs">Jobs</option>
-          <option value="Management">Management</option>
-          <option value="Pets & Animals">Pets & Animals</option>
-          <option value="Politics">Politics</option>
-          <option value="Reference & Education">Reference & Education</option>
-          <option value="Review">Review</option>
-          <option value="Science">Science</option>
-          <option value="Self Improvement">Self Improvement</option>
-          <option value="Society">Society</option>
-          <option value="Sports & Recreation">Sports & Recreation</option>
-          <option value="Transportation">Transportation</option>
-          <option value="Travel & Leisure">Travel & Leisure</option>
-          <option value="Writing & Speaking">Writing & Speaking</option>
-        </select> 
       
-        <br><br>
-        <button onclick="App.createPostandPay()">Submit Post </button>
-    
-        <p id="status"></p>
-        
+            <h1>Immutable Post</h1>
 
-        <h1>You Post(s)</h1>
-        <div class="your-postlist">
-            <ul id="postlist">
+            <!-- POST FORM -->
+            <div id="page-landing">
+                <p>You have <strong class="balance">loading...</strong> ETH</p>
 
-            </ul>
-        </div>
+                <h3>Create a Post</h3>
 
-        <h1>All Posts</h1>
-        <div class="your-postlist">
-            <ul id="allpostlist">
+                <label for="title">Title:</label>
+                <input type="text" id="title" placeholder="My Title" />
+                <label for="description">Description:</label><br>
+                <textarea id="description" placeholder="My Description"></textarea><br>
+                <label for="category">Category:</label><br>
+                <select id="category">
+                  <option value="Arts & Entertainment">Arts & Entertainment</option>
+                  <option value="Business">Business</option>
+                  <option value="Careers">Careers</option>
+                  <option value="Computers">Computers</option>
+                  <option value="Engineering & Technology">Engineering & Technology</option>
+                  <option value="Environment">Environment</option>
+                  <option value="Fashion">Fashion</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Food & Beverage">Food & Beverage</option>
+                  <option value="Health & Fitness">Health & Fitness</option>
+                  <option value="Hobbies">Hobbies</option>
+                  <option value="Home & Family">Home & Family</option>
+                  <option value="Internet">Internet</option>
+                  <option value="Jobs">Jobs</option>
+                  <option value="Management">Management</option>
+                  <option value="Pets & Animals">Pets & Animals</option>
+                  <option value="Politics">Politics</option>
+                  <option value="Reference & Education">Reference & Education</option>
+                  <option value="Review">Review</option>
+                  <option value="Science">Science</option>
+                  <option value="Self Improvement">Self Improvement</option>
+                  <option value="Society">Society</option>
+                  <option value="Sports & Recreation">Sports & Recreation</option>
+                  <option value="Transportation">Transportation</option>
+                  <option value="Travel & Leisure">Travel & Leisure</option>
+                  <option value="Writing & Speaking">Writing & Speaking</option>
+                </select> 
+              
+                <br><br>
+                <button onclick="App.createPostandPay()">Submit Post </button>
+            
+                <p id="status"></p>
+                
+                <hr/>
+                <h3>Your Post(s)</h3>
+                <div class="your-postlist">
+                    <ul id="postlist">
 
-            </ul>
-        </div>
+                    </ul>
+                </div>
+
+                <h3>All Posts from Genesis</h3>
+                <div class="your-postlist">
+                    <ul id="allpostlist">
+
+                    </ul>
+                </div>
+            </div>
+
+
+            <!-- SINGLE POST -->
+            <div id="singpost-page" style="display:none;">
+                <h1 id="single-title"></h1>
+                <p>In category:<small id="single-category"></small></p>
+                <p id="single-description"></p>
+            </div> 
+
+
+          <div class="col-sm-3"></div>
+      </div>
     </div>
-    <div id="singpost-page" style="display:none;">
-        <h1 id="single-title"></h1>
-        <p>In category:<small id="single-category"></small></p>
-        <p id="single-description"></p>
-    </div>    
+       
     <script src="/index.js"></script>
   </body>
 </html>

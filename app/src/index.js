@@ -80,7 +80,7 @@ const App = {
           strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
           var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+posts[i]);
           console.log(url);
-          postlist.innerHTML +="<li><h2><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
+          postlist.innerHTML +="<li><h4><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h4><p>"+postdata.description+"</p></li>";
      }
 
      allpostlist.innerHTML = "";
@@ -95,7 +95,7 @@ const App = {
           strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
           var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+j);
           console.log(url);
-          allpostlist.innerHTML +="<li><h2><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h2><p>"+postdata.description+"</p></li>";
+          allpostlist.innerHTML +="<li><h4><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h4><p>"+postdata.description+"</p></li>";
      }
      //alert("The URL of this page is: " + window.location);
     
