@@ -19,4 +19,12 @@ module.exports = {
     hot: true, 
     historyApiFallback: true
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
+  }
 };

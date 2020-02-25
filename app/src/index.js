@@ -1,8 +1,10 @@
 import Web3 from "web3";
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
 import immutablePostsArtifact from "../../build/contracts/ImmutablePosts.json";
 
 
-
+ 
 const App = {
   web3: null,
   account: null,
