@@ -153,7 +153,7 @@ const App = {
     this.setStatus("Initiating submission... (please wait)");
     const { createPostandPay } = this.meta.methods;
 
-    await createPostandPay(title, description, category).send({ from: this.account, value:web3.toWei(thefee, "ether") });
+    await createPostandPay(title, description, category).send({ from: this.account, value:web3.toWei(thefee, "wei") });
 
     // web3.eth.sendTransaction({
     //   to:'0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6', 
@@ -175,9 +175,35 @@ const App = {
     await setFee(newfee).send({ from: this.account });
     this.setStatus("Fee Updated!");
     this.refreshPosts();
-    fee = "";
+    newfee = "";
 
   },
+  setNewWalletAddressBenef: async function() {
+ 
+    const newwalletbenefiary = document.getElementById("newwalletbenefiary").value;
+   
+    this.setStatus("Initiating submission... (please wait)");
+    const { setUpBeneficiary } = this.meta.methods;
+    await setUpBeneficiary(newwalletbenefiary).send({ from: this.account });
+    this.setStatus("Wallet Updated!");
+    this.refreshPosts();
+    //newwalletbenefiary = "";
+
+  },
+  setNewWalletAddress: async function() {
+ 
+    const newwallet = document.getElementById("newwallet").value;
+   
+    this.setStatus("Initiating submission... (please wait)");
+    const { setUpOurWallerAddress } = this.meta.methods;
+    await setUpOurWallerAddress(newwallet).send({ from: this.account });
+    this.setStatus("Wallet Updated!");
+    this.refreshPosts();
+    //newwalletbenefiary = "";
+
+  },
+
+  
 
   setStatus: function(message) {
     const status = document.getElementById("status");

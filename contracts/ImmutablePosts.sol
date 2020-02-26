@@ -22,10 +22,10 @@ contract ImmutablePosts is Ownable {
     uint nbarticles = 0;
 
     // Beneficiary Wallet address
-    address payable pluginbeneficiary = 0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6;
+    address payable pluginbeneficiary = 0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6; // Account 2 in Ganache
     
     //Our Wallet
-    address payable walletaddress = 0x6711be7371C275F62Ee7F69e4Cb7C09ACEd852cC;
+    address payable walletaddress = 0x6711be7371C275F62Ee7F69e4Cb7C09ACEd852cC; // Account 3 in Ganache
 
     //Post to Owner
     mapping (uint => address) public postToOwner;
@@ -46,7 +46,7 @@ contract ImmutablePosts is Ownable {
     Category[] public categories;
 
     // Fee to post a Post
-    uint postFee = 1 ether;
+    uint postFee = 1000000000000000000 wei;
     
     //Create a new post
     function createPostandPay(string memory _title, string memory _description, string memory _category) public payable{
@@ -123,6 +123,7 @@ contract ImmutablePosts is Ownable {
 
      // For Admin of the contract to control the fee
      function setFee(uint _fee) external onlyOwner {
+        _fee = _fee * 10**18;
         postFee = _fee;
      }
       function getFee() public view returns (uint)   {
@@ -130,12 +131,14 @@ contract ImmutablePosts is Ownable {
      }
      
      // Setup Beneficiary wallet adddress
-    function setUpBeneficiary(address payable _newbeneficiary) internal {
+    function setUpBeneficiary(address payable _newbeneficiary) public {
        pluginbeneficiary = _newbeneficiary;
     }
-     
+     function getNewBenef() public view returns (address payable)   {
+        return  pluginbeneficiary;
+     } 
     // Update our Wallet address Admin only 
-     function setUpOurWallerAddress(address payable _ourwallet) external onlyOwner {
+     function setUpOurWallerAddress(address payable _ourwallet) public onlyOwner {
        walletaddress = _ourwallet;
     }
 
