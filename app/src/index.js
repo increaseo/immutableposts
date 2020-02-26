@@ -44,6 +44,11 @@ const App = {
      const { getPostbyAccount } = this.meta.methods;
      const { getPostbyId } = this.meta.methods;
      const { getNbArticles } = this.meta.methods;
+     const { getFee } = this.meta.methods;
+
+     //Display Fee
+     const thefee = await getFee().call();
+     console.log(thefee);
 
     //List single post if loaded from Google with#!
     var theurl = document.location + '';
@@ -140,10 +145,15 @@ const App = {
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
     const category = document.getElementById("category").value;
+    const { getFee } = this.meta.methods;
+    const thefee = await getFee().call();
+  
+
 
     this.setStatus("Initiating submission... (please wait)");
     const { createPostandPay } = this.meta.methods;
-    await createPostandPay(title, description, category).send({ from: this.account, value:web3.toWei(1, "ether") });
+
+    await createPostandPay(title, description, category).send({ from: this.account, value:web3.toWei(thefee, "ether") });
 
     // web3.eth.sendTransaction({
     //   to:'0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6', 
@@ -155,6 +165,18 @@ const App = {
     this.refreshPosts();
     title = "";
     description ="";
+  },
+  setNewFee: async function() {
+ 
+    const newfee = document.getElementById("fee").value;
+   
+    this.setStatus("Initiating submission... (please wait)");
+    const { setFee } = this.meta.methods;
+    await setFee(newfee).send({ from: this.account });
+    this.setStatus("Fee Updated!");
+    this.refreshPosts();
+    fee = "";
+
   },
 
   setStatus: function(message) {

@@ -125,6 +125,9 @@ contract ImmutablePosts is Ownable {
      function setFee(uint _fee) external onlyOwner {
         postFee = _fee;
      }
+      function getFee() public view returns (uint)   {
+        return postFee;
+     }
      
      // Setup Beneficiary wallet adddress
     function setUpBeneficiary(address payable _newbeneficiary) internal {
