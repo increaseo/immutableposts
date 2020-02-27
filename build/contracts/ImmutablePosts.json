@@ -9584,6 +9584,85 @@
     "version": "0.5.12+commit.7709ece9.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event",
+          "signature": "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0"
+        },
+        "0x9b461456bf22c34b04b705590ce2218c33439e5062e403bd18054efe39a4a6fc": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "categoryname",
+              "type": "string"
+            }
+          ],
+          "name": "newCategory",
+          "type": "event",
+          "signature": "0x9b461456bf22c34b04b705590ce2218c33439e5062e403bd18054efe39a4a6fc"
+        },
+        "0xe11e7a2b84ce91d77d6e22703b19b4218d69af20d7a8418ba6d728b323dd1b1a": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "category",
+              "type": "string"
+            }
+          ],
+          "name": "newPost",
+          "type": "event",
+          "signature": "0xe11e7a2b84ce91d77d6e22703b19b4218d69af20d7a8418ba6d728b323dd1b1a"
+        }
+      },
+      "links": {},
+      "address": "0xD3c7fc1978c6F4848B2569cB0bD87C4544A65084",
+      "transactionHash": "0x854b93a04da8c9f479cb6eebb0f65d606d3cf09b074fd9d9654a4fa059fa0513"
+    },
     "5777": {
       "events": {
         "0x9b461456bf22c34b04b705590ce2218c33439e5062e403bd18054efe39a4a6fc": {
@@ -9678,7 +9757,7 @@
     }
   },
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-02-27T15:08:45.756Z",
+  "updatedAt": "2020-02-27T15:25:49.644Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Seb @Increaseo on the concept idea of Troy @Increaseo",
