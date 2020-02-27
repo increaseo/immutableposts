@@ -178,6 +178,18 @@ const App = {
     newfee = "";
 
   },
+  setNewPercentage: async function() {
+ 
+    const newpercent = document.getElementById("percentage").value;
+   
+    this.setStatus("Initiating submission... (please wait)");
+    const { setPercentage } = this.meta.methods;
+    await setPercentage(newpercent).send({ from: this.account });
+    this.setStatus("Percentage Updated!");
+    this.refreshPosts();
+    //newfee = "";
+
+  },
   setNewWalletAddressBenef: async function() {
  
     const newwalletbenefiary = document.getElementById("newwalletbenefiary").value;

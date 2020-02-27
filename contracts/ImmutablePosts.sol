@@ -45,8 +45,11 @@ contract ImmutablePosts is Ownable {
     Post[] public posts;
     Category[] public categories;
 
-    // Fee to post a Post
-    uint postFee = 1000000000000000000 wei;
+    // Fee to post a Post approx 20USD
+    uint postFee = 87200000000000000 wei;
+
+    //Percentage share
+    uint commissionPercentage = 5;
     
     //Create a new post
     function createPostandPay(string memory _title, string memory _description, string memory _category) public payable{
@@ -59,13 +62,13 @@ contract ImmutablePosts is Ownable {
           nbarticles ++;
           //Pay and Split the Fee
           payAndSplitFee(postFee);
-          
+        
           
     }
     //Split fee for the post between Beneficiary and Us
     function payAndSplitFee(uint _fullfee) public payable {
           
-          uint commissionPercentage = 2;
+          
           uint postFeeBeneficiary = _fullfee * commissionPercentage / 100;
           pluginbeneficiary.transfer(postFeeBeneficiary);
           uint postFeeUs = _fullfee - postFeeBeneficiary;
@@ -130,6 +133,13 @@ contract ImmutablePosts is Ownable {
         return postFee;
      }
      
+      // For Admin of the contract to control the percentage
+     function setPercentage(uint _percent) external onlyOwner {
+        _percent = _percent;
+        commissionPercentage = _percent;
+     }
+
+
      // Setup Beneficiary wallet adddress
     function setUpBeneficiary(address payable _newbeneficiary) public {
        pluginbeneficiary = _newbeneficiary;
