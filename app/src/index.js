@@ -3,7 +3,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import immutablePostsArtifact from "../../build/contracts/ImmutablePosts.json";
 
-
+ 
  
 const App = {
   web3: null,
@@ -52,12 +52,15 @@ const App = {
 
     //List single post if loaded from Google with#!
     var theurl = document.location + '';
-  if(theurl == "http://localhost:8081/") {
+    
+  if(theurl == "http://immutablepost.com/") {
+  
     var pagelanding = document.getElementById('page-landing');
     pagelanding.style.display = 'block';
     var pagesingle = document.getElementById('singpost-page');
     pagesingle.style.display = 'none';
   } else {
+   
      var splitUrl = theurl.split('/');  
      var getlasturlbit = splitUrl[4];
      var getlasturlbit = splitUrl[4];
@@ -83,7 +86,7 @@ const App = {
           strcat = strcat.replace(/\s+/g, '-').toLowerCase();
           var strtitle = postdata.title;
           strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
-          var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+posts[i]);
+          var url = encodeURI("http://immutablepost.com/"+strcat+"/"+strtitle+"-"+posts[i]);
           console.log(url);
           postlist.innerHTML +="<li><h4><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h4><p>"+postdata.description+"</p></li>";
      }
@@ -98,7 +101,7 @@ const App = {
           strcat = strcat.replace(/\s+/g, '-').toLowerCase();
           var strtitle = postdata.title;
           strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
-          var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+j);
+          var url = encodeURI("http://immutablepost.com/"+strcat+"/"+strtitle+"-"+j);
           console.log(url);
           allpostlist.innerHTML +="<li><h4><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h4><p>"+postdata.description+"</p></li>";
      }
@@ -110,7 +113,7 @@ const App = {
     e = e || window.event;
     e.preventDefault();
     var urlgoto = elem.getAttribute('data-url');
-    window.history.pushState("", "Sample Title",urlgoto);
+    window.history.pushState("", "Immutable Post",urlgoto);
 
    
 
@@ -145,15 +148,14 @@ const App = {
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
     const category = document.getElementById("category").value;
+    const benefwallet = document.getElementById("submit-bt").getAttribute("data-sharewallet");
     const { getFee } = this.meta.methods;
     const thefee = await getFee().call();
-  
-
 
     this.setStatus("Initiating submission... (please wait)");
     const { createPostandPay } = this.meta.methods;
 
-    await createPostandPay(title, description, category).send({ from: this.account, value:web3.toWei(thefee, "wei") });
+    await createPostandPay(title, description, category, benefwallet).send({ from: this.account, value:web3.toWei(thefee, "wei") });
 
     // web3.eth.sendTransaction({
     //   to:'0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6', 
@@ -190,18 +192,18 @@ const App = {
     //newfee = "";
 
   },
-  setNewWalletAddressBenef: async function() {
+  // setNewWalletAddressBenef: async function() {
  
-    const newwalletbenefiary = document.getElementById("newwalletbenefiary").value;
+  //   const newwalletbenefiary = document.getElementById("newwalletbenefiary").value;
    
-    this.setStatus("Initiating submission... (please wait)");
-    const { setUpBeneficiary } = this.meta.methods;
-    await setUpBeneficiary(newwalletbenefiary).send({ from: this.account });
-    this.setStatus("Wallet Updated!");
-    this.refreshPosts();
-    //newwalletbenefiary = "";
+  //   this.setStatus("Initiating submission... (please wait)");
+  //   const { setUpBeneficiary } = this.meta.methods;
+  //   await setUpBeneficiary(newwalletbenefiary).send({ from: this.account });
+  //   this.setStatus("Wallet Updated!");
+  //   this.refreshPosts();
+  //   //newwalletbenefiary = "";
 
-  },
+  // },
   setNewWalletAddress: async function() {
  
     const newwallet = document.getElementById("newwallet").value;
@@ -230,7 +232,7 @@ history.pushState = function () {
     pushState.apply(history, arguments);
     //fireEvents('pushState', arguments);  // Some event-handling function
     var theurl = document.location + '';
-    if(theurl == "http://localhost:8081/") {
+    if(theurl == "http://immutablepost.com/") {
       var pagelanding = document.getElementById('page-landing');
       pagelanding.style.display = 'block';
       var pagesingle = document.getElementById('singpost-page');
@@ -249,7 +251,7 @@ history.pushState = function () {
 window.onpopstate = function(event) {
   //alert(`location: ${document.location}, state: ${JSON.stringify(event.state)}`)
   var theurl = document.location + '';
-  if(theurl == "http://localhost:8081/") {
+  if(theurl == "http://immutablepost.com/") {
     var pagelanding = document.getElementById('page-landing');
     pagelanding.style.display = 'block';
     var pagesingle = document.getElementById('singpost-page');

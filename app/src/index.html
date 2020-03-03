@@ -59,7 +59,7 @@
                 </select> 
               
                 <br><br>
-                <button onclick="App.createPostandPay()">Submit Post </button>
+                <button id="submit-bt" onclick="App.createPostandPay()" data-sharewallet="0x857A4686a1a1C5A963864Af96B17D3DEEA6252d6">Submit Post </button>
             
                 <p id="status"></p>
                 <hr/>
@@ -74,11 +74,11 @@
                    <input type="text" id="percentage" placeholder="Enter new percentage" />
                    <button onclick="App.setNewPercentage()">Set Percentage </button>
                 </div><br><br>
-                <div class="setbenefaddress">
+                <!-- <div class="setbenefaddress">
                   <label for="title">Set New Beneficiary Address Wallet:</label>
                    <input type="text" id="newwalletbenefiary" placeholder="Enter new wallet address" />
                    <button onclick="App.setNewWalletAddressBenef()">Set New Wallet Beneficiary </button>
-                </div><br><br>
+                </div><br><br> -->
                 <div class="setbenefaddress">
                   <label for="title">Set New Main Address Wallet:</label>
                    <input type="text" id="newwallet" placeholder="Enter new wallet address" />

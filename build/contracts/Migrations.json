@@ -890,18 +890,18 @@
     "3": {
       "events": {},
       "links": {},
-      "address": "0x48a486852e5c11762C2814ffE4cC841Bd93a9387",
-      "transactionHash": "0xcd2148fc74e15fdd7ab4a64e4605d97f1f6afd158a54ff6689bc0ae39680ca7d"
+      "address": "0x54665B6E4b3b54282F7Eb978A0F06D149855135f",
+      "transactionHash": "0x63c08cb49fd1d92559215e887c5a824509cb0317393bbbbf7701659e79c713ee"
     },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x9e495Cbd51ce9C2116B435fc7795ff15dD53879a",
-      "transactionHash": "0x2c0f751f7c51c713ba6f2505eaae65fa57a43ff6e91430e237914479e4a11486"
+      "address": "0xCF8d6cBAc9eBb5fd261a80d11f6Fc3796163c9C7",
+      "transactionHash": "0x971cb63f17f22d2047564a134b93daff292f2c69aff5961b277bcf2796288107"
     }
   },
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-02-27T15:25:49.648Z",
+  "updatedAt": "2020-03-03T08:36:10.142Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
