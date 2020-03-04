@@ -53,7 +53,7 @@ const App = {
     //List single post if loaded from Google with#!
     var theurl = document.location + '';
     
-  if(theurl == "http://immutablepost.com/") {
+  if(theurl == "http://localhost:8081/") {
   
     var pagelanding = document.getElementById('page-landing');
     pagelanding.style.display = 'block';
@@ -86,7 +86,7 @@ const App = {
           strcat = strcat.replace(/\s+/g, '-').toLowerCase();
           var strtitle = postdata.title;
           strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
-          var url = encodeURI("http://immutablepost.com/"+strcat+"/"+strtitle+"-"+posts[i]);
+          var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+posts[i]);
           console.log(url);
           postlist.innerHTML +="<li><h4><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h4><p>"+postdata.description+"</p></li>";
      }
@@ -101,7 +101,7 @@ const App = {
           strcat = strcat.replace(/\s+/g, '-').toLowerCase();
           var strtitle = postdata.title;
           strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
-          var url = encodeURI("http://immutablepost.com/"+strcat+"/"+strtitle+"-"+j);
+          var url = encodeURI("http://localhost:8081/"+strcat+"/"+strtitle+"-"+j);
           console.log(url);
           allpostlist.innerHTML +="<li><h4><a href='#' data-url='"+url+"' onclick='App.gotopost(event,this)' class='pushlink'>"+postdata.title+"</a><small>("+postdata.category+")</small></h4><p>"+postdata.description+"</p></li>";
      }
@@ -232,7 +232,7 @@ history.pushState = function () {
     pushState.apply(history, arguments);
     //fireEvents('pushState', arguments);  // Some event-handling function
     var theurl = document.location + '';
-    if(theurl == "http://immutablepost.com/") {
+    if(theurl == "http://localhost:8081/") {
       var pagelanding = document.getElementById('page-landing');
       pagelanding.style.display = 'block';
       var pagesingle = document.getElementById('singpost-page');
@@ -251,7 +251,7 @@ history.pushState = function () {
 window.onpopstate = function(event) {
   //alert(`location: ${document.location}, state: ${JSON.stringify(event.state)}`)
   var theurl = document.location + '';
-  if(theurl == "http://immutablepost.com/") {
+  if(theurl == "http://localhost:8081/") {
     var pagelanding = document.getElementById('page-landing');
     pagelanding.style.display = 'block';
     var pagesingle = document.getElementById('singpost-page');

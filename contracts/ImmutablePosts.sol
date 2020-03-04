@@ -13,11 +13,20 @@ contract ImmutablePosts is Ownable {
         string title;
         string description;
         string category;
+        address authorpost;
     }
 
     //Category 
     struct Category {
         string name;
+    }
+
+    //Author
+    struct Author {
+       string name;
+       string bio;
+       string link;
+       address authoraddress;
     }
     uint nbarticles = 0;
 
@@ -32,6 +41,14 @@ contract ImmutablePosts is Ownable {
     mapping (address => uint) ownerToPost;
     //Post Count per Owner
     mapping (address => uint) ownerPostCount;
+
+     // Owner to Author
+    mapping (address => uint) public ownerToAuthor;
+    //Author Count per Owner
+    mapping (address => uint) public ownerAuthorCount;
+    //Author to Owner
+    mapping (uint => address) public authorToOwner;
+
     
     mapping (address => uint) balances;
 
@@ -39,21 +56,54 @@ contract ImmutablePosts is Ownable {
     event newPost(uint id, string title, string description, string category);
     // New Category created
     event newCategory(uint id, string categoryname);
+    // New Author created
+    event newAuthor(uint idauthor, string name, string bio, string link, address authoraddress);
+    
 
     // ARRAY METHOD for Posts and Categories
     Post[] public posts;
     Category[] public categories;
+    Author[] public authors;
 
     // Fee to post a Post approx 20USD
     uint postFee = 87200000000000000 wei;
 
     //Percentage share
     uint commissionPercentage = 5;
-    
+     
+    //Create a new author
+    function createAuthor (string memory _name, string memory _bio, string memory _link) public {
+        authors.push(Author(_name,_bio,_link, msg.sender));
+        uint idauthor =  authors.length -1;
+        authorToOwner[idauthor] = msg.sender;
+        ownerToAuthor[msg.sender] = idauthor;
+        ownerAuthorCount[msg.sender]++;
+        emit newAuthor(idauthor, _name,_bio,_link, msg.sender);
+
+    }
+     //Get Author per Account
+     function getAuthorbyAccount(address _owner) external view returns(uint[] memory) {
+        uint[] memory result = new uint[](ownerAuthorCount[_owner]);
+        uint counter = 0;
+        for (uint i = 0; i < authors.length; i++) {
+          if (authorToOwner[i] == _owner) {
+            result[counter] = i;
+            counter++;
+          }
+        }
+        return result;
+      }
+     // Get Author by Id Array
+      function getAuthorbyId(uint pos) public view returns(string memory name, string memory bio, string memory link, address authoraddress){ 
+        Author storage authorss = authors[pos];
+        return (authorss.name, authorss.bio, authorss.link, authorss.authoraddress);
+     } 
+
+
     //Create a new post
     function createPostandPay(string memory _title, string memory _description, string memory _category, address payable _pluginbeneficiary) public payable{
           require(msg.value == postFee);
-          uint id = posts.push(Post(_title,_description,_category)) - 1;
+          uint id = posts.push(Post(_title,_description,_category, msg.sender)) - 1;
           postToOwner[id] = msg.sender;
           ownerToPost[msg.sender] = id;
           ownerPostCount[msg.sender]++;
@@ -118,9 +168,9 @@ contract ImmutablePosts is Ownable {
       }
 
      // Get Post by Id Array
-      function getPostbyId(uint pos) public view returns(string memory title, string memory description, string memory category){ 
+      function getPostbyId(uint pos) public view returns(string memory title, string memory description, string memory category, address authorpost){ 
         Post storage postss = posts[pos];
-        return (postss.title, postss.description, postss.category);
+        return (postss.title, postss.description, postss.category, postss.authorpost);
      } 
 
      // For Admin of the contract to control the fee
