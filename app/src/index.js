@@ -21,6 +21,7 @@ $("#featimg").on("change", function () {
 
       let ipfsLink = result[0].hash;
       console.log(ipfsLink );
+      $('#ipfshash').attr('data-ipfs', ipfsLink);
 
     })
   }
@@ -185,6 +186,7 @@ const App = {
     const { getFee } = this.meta.methods;
     const thefee = await getFee().call();
 
+    const imageipfs = document.getElementById("ipfshash").getAttribute("data-ipfs");
     const authorname = document.getElementById("authorname").value;
     const bio = document.getElementById("authorbio").value;
     const link = document.getElementById("authorlink").value;
@@ -194,7 +196,8 @@ const App = {
     const compcontactname = document.getElementById("compcontactname").value;
     const compphone = document.getElementById("compphone").value;
     const compemail = document.getElementById("compemail").value;
-     
+    
+    console.log(imageipfs);
 
     if (title == "" || description == "" || category == "" || authorname == "" || bio == "" || compname == "" || compcountry == "" || compaddress == "" || compcontactname == "" || compphone == "" || compemail == "" ) {
         if(title == "") {
@@ -266,11 +269,23 @@ const App = {
       await createAuthor(authorname, bio, link).send({ from: this.account });
 
       //Posting Article
+      if (imageipfs == "") {
       const { createPostandPay } = this.meta.methods;
-      await createPostandPay(title, description, category, benefwallet).send({ from: this.account, value: web3.toWei(thefee, "wei") });
+      await createPostandPay(title, description, category, benefwallet,'').send({ from: this.account, value: web3.toWei(thefee, "wei") });
+      } else {
+      const { createPostandPay } = this.meta.methods;
+        await createPostandPay(title, description, category, benefwallet, imageipfs).send({ from: this.account, value: web3.toWei(thefee, "wei") });
 
+      }
+      // Email Tax Invoice
+      if (compcountry =="Australia") {
+
+      } else {
+
+      }
 
       this.setStatus("Upload completed!");
+
       this.refreshPosts();
       title = "";
       description = "";

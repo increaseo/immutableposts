@@ -1,8 +1,43 @@
 import Web3 from "web3";
+import 'jquery';
+import 'buffer';
 import immutablePostsArtifact from "../../build/contracts/ImmutablePosts.json";
 
+const IPFS = require('ipfs-api');
+const ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+var $ = require('jquery');
 
- 
+// IPFS Upload
+$("#featimg").on("change", function () {
+  const file = this.files[0];
+  const reader = new window.FileReader();
+  reader.readAsArrayBuffer(file);
+
+  reader.onload = function (e) {
+    const bufferimg = Buffer(reader.result); // honestly as a web developer I do not fully appreciate the difference between buffer and arrayBuffer 
+    ipfs.add(bufferimg, (err, result) => {
+      console.log(err, result);
+
+      let ipfsLink = result[0].hash;
+      console.log(ipfsLink);
+      $('#ipfshash').attr('data-ipfs', ipfsLink);
+
+    })
+  }
+})
+
+
+$('#btnext').on('click', function () {
+  $('#sectionformstart').hide();
+  $('#sectionformend').show();
+})
+$('#btprev').on('click', function () {
+  $('#sectionformstart').show();
+  $('#sectionformend').hide();
+})
+
+
+
 const App = {
   web3: null,
   account: null,
@@ -54,21 +89,112 @@ const App = {
     const { getFee } = this.meta.methods;
     const thefee = await getFee().call();
 
-    this.setStatus("Initiating submission... (please wait)");
-    const { createPostandPay } = this.meta.methods;
+    const imageipfs = document.getElementById("ipfshash").getAttribute("data-ipfs");
+    const authorname = document.getElementById("authorname").value;
+    const bio = document.getElementById("authorbio").value;
+    const link = document.getElementById("authorlink").value;
+    const compname = document.getElementById("compname").value;
+    const compcountry = document.getElementById("compcountry").value;
+    const compaddress = document.getElementById("compaddress").value;
+    const compcontactname = document.getElementById("compcontactname").value;
+    const compphone = document.getElementById("compphone").value;
+    const compemail = document.getElementById("compemail").value;
 
-    await createPostandPay(title, description, category, benefwallet).send({ from: this.account, value:web3.toWei(thefee, "wei") });
+    console.log(imageipfs);
 
-    // web3.eth.sendTransaction({
-    //   to:'0xa27F275bA433f981a6Ed1D94A3597Fb82952c6C6', 
-    //   from:'0x36c1A317314678f57871A94E5cAE28cF89d53432', 
-    //   value:web3.toWei("0.5", "ether")
-    // }, console.log)
+    if (title == "" || description == "" || category == "" || authorname == "" || bio == "" || compname == "" || compcountry == "" || compaddress == "" || compcontactname == "" || compphone == "" || compemail == "") {
+      if (title == "") {
+        $('#title').next('.errorfield').html('Please complete this field');
+        $('#sectionformstart').show();
+        $('#sectionformend').hide();
+        return false;
+      } else if (description == "") {
+        $('#description').next('.errorfield').html('Please complete this field');
+        $('#sectionformstart').show();
+        $('#sectionformend').hide();
+        return false;
+      } else if (category == "") {
+        $('#category').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (authorname == "") {
+        $('#authorname').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (bio == "") {
+        $('#authorbio').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (compname == "") {
+        $('#compname').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (compcountry == "") {
+        $('#compcountry').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (compaddress == "") {
+        $('#compaddress').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (compcontactname == "") {
+        $('#compcontactname').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (compphone == "") {
+        $('#compphone').next('.errorfield').html('Please complete this field');
+        return false;
+      } else if (compemail == "") {
+        $('#compemail').next('.errorfield').html('Please complete this field');
+        return false;
+      }
 
-    this.setStatus("Upload completed!");
-    this.refreshPosts();
-    title = "";
-    description ="";
+    } else {
+
+      this.setStatus("Initiating submission... (please wait)");
+
+
+      //getting nbpost to generate id
+      const { getNbArticles } = this.meta.methods;
+      var nbposts = await getNbArticles().call();
+      var j = nbposts;
+
+      var tempDate = new Date();
+      var invoicenumberdate = tempDate.getFullYear() + '' + (tempDate.getMonth() + 1) + '' + tempDate.getDate() + '' + tempDate.getHours() + '' + tempDate.getMinutes() + '' + tempDate.getSeconds();
+      var date = tempDate.getFullYear() + '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate();
+      //Get GST option
+      var pricenogst = 0.0872 * 0.909090909090909;
+      var gst = 0.0872 - pricenogst;
+      const currDate = date;
+
+      //Get the link posted
+      var strcat = category;
+      strcat = strcat.replace(/\s+/g, '-').toLowerCase();
+      var strtitle = title;
+      strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
+      var url = encodeURI("https://immutablepost.com/post/" + strcat + "/" + strtitle + "/" + j);
+
+      //getting author information and adding author to the post
+      const { createAuthor } = this.meta.methods;
+      await createAuthor(authorname, bio, link).send({ from: this.account });
+
+      //Posting Article
+      if (imageipfs == "") {
+        const { createPostandPay } = this.meta.methods;
+        await createPostandPay(title, description, category, benefwallet, '').send({ from: this.account, value: web3.toWei(thefee, "wei") });
+      } else {
+        const { createPostandPay } = this.meta.methods;
+        await createPostandPay(title, description, category, benefwallet, imageipfs).send({ from: this.account, value: web3.toWei(thefee, "wei") });
+
+      }
+      // Email Tax Invoice
+      if (compcountry == "Australia") {
+
+      } else {
+
+      }
+
+      this.setStatus("Upload completed!");
+
+      this.refreshPosts();
+      title = "";
+      description = "";
+
+    }
+
   },
   setStatus: function(message) {
     const status = document.getElementById("status");
