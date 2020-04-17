@@ -17,7 +17,10 @@
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "jquery": "^3.4.1",
+    "buffer": "^5.6.0",
+    "fs-extra": "^9.0.0",
+    "ipfs-api": "^26.1.2",
+    "jquery": "^3.5.0",
     "popper": "^1.0.1",
     "popper.js": "^1.14.3",
     "web3": "^1.2.4"
