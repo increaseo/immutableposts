@@ -30,10 +30,12 @@ $("#featimg").on("change", function () {
 $('#btnext').on('click', function () {
   $('#sectionformstart').hide();
   $('#sectionformend').show();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 })
 $('#btprev').on('click', function () {
   $('#sectionformstart').show();
   $('#sectionformend').hide();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 })
 
 
@@ -100,7 +102,7 @@ const App = {
     const compphone = document.getElementById("compphone").value;
     const compemail = document.getElementById("compemail").value;
 
-    console.log(imageipfs);
+    //console.log(imageipfs);
 
     if (title == "" || description == "" || category == "" || authorname == "" || bio == "" || compname == "" || compcountry == "" || compaddress == "" || compcontactname == "" || compphone == "" || compemail == "") {
       if (title == "") {
@@ -148,6 +150,22 @@ const App = {
 
 
       //getting nbpost to generate id
+
+
+      //getting author information and adding author to the post
+      const { createAuthor } = this.meta.methods;
+      await createAuthor(authorname, bio, link).send({ from: this.account });
+
+      //Posting Article
+      if (imageipfs == "") {
+        const { createPostandPay } = this.meta.methods;
+        await createPostandPay(title, description, category, benefwallet, '').send({ from: this.account, value: web3.toWei(thefee, "wei") });
+      } else {
+        const { createPostandPay } = this.meta.methods;
+        await createPostandPay(title, description, category, benefwallet, imageipfs).send({ from: this.account, value: web3.toWei(thefee, "wei") });
+
+      }
+      // Email Tax Invoice
       const { getNbArticles } = this.meta.methods;
       var nbposts = await getNbArticles().call();
       var j = nbposts;
@@ -167,25 +185,62 @@ const App = {
       strtitle = strtitle.replace(/\s+/g, '-').toLowerCase();
       var url = encodeURI("https://immutablepost.com/post/" + strcat + "/" + strtitle + "/" + j);
 
-      //getting author information and adding author to the post
-      const { createAuthor } = this.meta.methods;
-      await createAuthor(authorname, bio, link).send({ from: this.account });
 
-      //Posting Article
-      if (imageipfs == "") {
-        const { createPostandPay } = this.meta.methods;
-        await createPostandPay(title, description, category, benefwallet, '').send({ from: this.account, value: web3.toWei(thefee, "wei") });
-      } else {
-        const { createPostandPay } = this.meta.methods;
-        await createPostandPay(title, description, category, benefwallet, imageipfs).send({ from: this.account, value: web3.toWei(thefee, "wei") });
+      var company_name = $('#compname').val();
+      var company_contact_name = $('#compcontactname').val();
+      var company_country = $('#compcountry').val();
+      var company_address = $('#compaddress').val();
+      var company_phone = $('#compphone').val();
+      var company_email = $('#compemail').val();
+      var fee = "0.0872 ETH";
+      var date = currDate;
+      var feenogst = pricenogst.toFixed(4);
+      var gstcal = gst.toFixed(4);
+      var invoicenb = invoicenumberdate;
+      var posturl = url;
 
-      }
-      // Email Tax Invoice
-      if (compcountry == "Australia") {
+      //For Split Invoice
+      var plugin_company_name = $('#pluginsetup_company').val();
+      var plugin_company_contact_name = $('#pluginsetup_fullname').val();
+      var plugin_company_country = $('#pluginsetup_country').val();
+      var plugin_company_address = $('#pluginsetup_address').val();
+      var plugin_company_phone = $('#pluginsetup_phone').val();
+      var plugin_company_email = $('#pluginsetup_email').val();
 
-      } else {
+      $.ajax({
+        type: "post",
+        dataType: "json",
+        url: my_ajax_object.ajax_url,
+        data: {
+          action: "send_email_post",
+          company_name: company_name,
+          company_contact_name: company_contact_name,
+          company_country: company_country,
+          company_address: company_address,
+          company_phone: company_phone,
+          company_email: company_email,
+          fee: fee,
+          feenogst: feenogst,
+          gstcal: gstcal,
+          invoicenb: invoicenb,
+          posturl: posturl,
+          plugin_company_name: plugin_company_name,
+          plugin_company_contact_name: plugin_company_contact_name,
+          plugin_company_country: plugin_company_country,
+          plugin_company_address: plugin_company_address,
+          plugin_company_phone: plugin_company_phone,
+          plugin_company_email: plugin_company_email,
+        },
+        success: function (response) {
+          if (response.type == "success") {
 
-      }
+          }
+          else {
+            //alert("Your vote could not be added")
+          }
+        }
+      })   
+
 
       this.setStatus("Upload completed!");
 
@@ -216,7 +271,7 @@ window.addEventListener("load", function() {
     );
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     App.web3 = new Web3(
-      new Web3.providers.HttpProvider("http://127.0.0.1:8545"),
+      new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/159beab8ddc94e4fadf540f13abca684"),
     );
   }
 
